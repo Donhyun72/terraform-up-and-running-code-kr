@@ -25,7 +25,8 @@ resource "aws_autoscaling_group" "example" {
   # availability_zones   = ["${data.aws_availability_zones.all.names}"]
   # availability_zones   = ["${data.aws_availability_zones.all.names[0]}"]
   # availability_zones = ["ap-southeast-1a", "ap-southeast-1b", "ap-southeast-1c"]
-  availability_zones   = [data.aws_availability_zones.all.names[0],data.aws_availability_zones.all.names[1],data.aws_availability_zones.all.names[2]]
+  # availability_zones   = [data.aws_availability_zones.all.names[0],data.aws_availability_zones.all.names[1],data.aws_availability_zones.all.names[2]]
+  availability_zones = data.aws_availability_zones.all.names
 
   # load_balancers    = ["${aws_elb.example.name}"]
   load_balancers    = [aws_elb.example.name]
@@ -67,7 +68,8 @@ resource "aws_elb" "example" {
   # availability_zones = ["${data.aws_availability_zones.all.names[0]}"]
   # availability_zones = [data.aws_availability_zones.all.names[0]]
   # availability_zones = ["ap-southeast-1a", "ap-southeast-1b", "ap-southeast-1c"]
-  availability_zones   = [data.aws_availability_zones.all.names[0],data.aws_availability_zones.all.names[1],data.aws_availability_zones.all.names[2]]
+  # availability_zones   = [data.aws_availability_zones.all.names[0],data.aws_availability_zones.all.names[1],data.aws_availability_zones.all.names[2]]
+  availability_zones = data.aws_availability_zones.all.names
   # security_groups    = ["${aws_security_group.elb.id}"]
   security_groups    = [aws_security_group.elb.id]
 
