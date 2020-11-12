@@ -1,3 +1,7 @@
+원서 코드 : https://github.com/brikis98/terraform-up-and-running-code
+
+추가소스 : https://github.com/Donhyun72/Terraform-Up-and-Running-Code-Samples-Translated
+
 # Terraform: 구성과 동작 실습 코드
 
 이 코드 레포는 *[Terraform: Up and Running](http://www.terraformupandrunning.com)* by 
