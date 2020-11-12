@@ -1,15 +1,12 @@
-terraform {
-  required_version = ">= 0.8, < 0.9"
-}
-
 provider "aws" {
-  region = "us-east-1"
+  region = "ap-southeast-1"
 }
 
 resource "aws_launch_configuration" "example" {
-  image_id        = "ami-40d28157"
+  image_id        = "ami-0c20b8b385217763f"
   instance_type   = "t2.micro"
-  security_groups = ["${aws_security_group.instance.id}"]
+  # security_groups = ["${aws_security_group.instance.id}"]
+  security_groups = [aws_security_group.instance.id]
 
   user_data = <<-EOF
               #!/bin/bash
@@ -23,14 +20,19 @@ resource "aws_launch_configuration" "example" {
 }
 
 resource "aws_autoscaling_group" "example" {
-  launch_configuration = "${aws_launch_configuration.example.id}"
-  availability_zones   = ["${data.aws_availability_zones.all.names}"]
+  # launch_configuration = "${aws_launch_configuration.example.id}"
+  launch_configuration = aws_launch_configuration.example.id
+  # availability_zones   = ["${data.aws_availability_zones.all.names}"]
+  # availability_zones   = ["${data.aws_availability_zones.all.names[0]}"]
+  #availability_zones = ["ap-southeast-1a", "ap-southeast-1b", "ap-southeast-2a"]
+  availability_zones   = [data.aws_availability_zones.all.names[0],data.aws_availability_zones.all.names[1],data.aws_availability_zones.all.names[2]]
 
-  load_balancers    = ["${aws_elb.example.name}"]
+  # load_balancers    = ["${aws_elb.example.name}"]
+  load_balancers    = [aws_elb.example.name]
   health_check_type = "ELB"
 
-  min_size = 2
-  max_size = 10
+  min_size = 1
+  max_size = 2
 
   tag {
     key                 = "Name"
@@ -43,8 +45,10 @@ resource "aws_security_group" "instance" {
   name = "terraform-example-instance"
 
   ingress {
-    from_port   = "${var.server_port}"
-    to_port     = "${var.server_port}"
+    # from_port   = "${var.server_port}"
+    from_port   = var.server_port
+    # to_port     = "${var.server_port}"
+    to_port     = var.server_port
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -56,15 +60,22 @@ resource "aws_security_group" "instance" {
 
 data "aws_availability_zones" "all" {}
 
+
 resource "aws_elb" "example" {
   name               = "terraform-asg-example"
-  availability_zones = ["${data.aws_availability_zones.all.names}"]
-  security_groups    = ["${aws_security_group.elb.id}"]
+  # availability_zones = ["${data.aws_availability_zones.all.names}"]
+  # availability_zones = ["${data.aws_availability_zones.all.names[0]}"]
+  #availability_zones = [data.aws_availability_zones.all.names[0]]
+  #availability_zones = ["ap-southeast-1a", "ap-southeast-1b", "ap-southeast-2a"]
+  availability_zones   = [data.aws_availability_zones.all.names[0],data.aws_availability_zones.all.names[1],data.aws_availability_zones.all.names[2]]
+  # security_groups    = ["${aws_security_group.elb.id}"]
+  security_groups    = [aws_security_group.elb.id]
 
   listener {
     lb_port           = 80
     lb_protocol       = "http"
-    instance_port     = "${var.server_port}"
+    # instance_port     = "${var.server_port}"
+    instance_port     = var.server_port
     instance_protocol = "http"
   }
 
