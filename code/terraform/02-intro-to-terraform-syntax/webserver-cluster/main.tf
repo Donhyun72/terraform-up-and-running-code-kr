@@ -24,7 +24,7 @@ resource "aws_autoscaling_group" "example" {
   launch_configuration = aws_launch_configuration.example.id
   # availability_zones   = ["${data.aws_availability_zones.all.names}"]
   # availability_zones   = ["${data.aws_availability_zones.all.names[0]}"]
-  #availability_zones = ["ap-southeast-1a", "ap-southeast-1b", "ap-southeast-1c"]
+  # availability_zones = ["ap-southeast-1a", "ap-southeast-1b", "ap-southeast-1c"]
   availability_zones   = [data.aws_availability_zones.all.names[0],data.aws_availability_zones.all.names[1],data.aws_availability_zones.all.names[2]]
 
   # load_balancers    = ["${aws_elb.example.name}"]
@@ -65,8 +65,8 @@ resource "aws_elb" "example" {
   name               = "terraform-asg-example"
   # availability_zones = ["${data.aws_availability_zones.all.names}"]
   # availability_zones = ["${data.aws_availability_zones.all.names[0]}"]
-  #availability_zones = [data.aws_availability_zones.all.names[0]]
-  #availability_zones = ["ap-southeast-1a", "ap-southeast-1b", "ap-southeast-1c"]
+  # availability_zones = [data.aws_availability_zones.all.names[0]]
+  # availability_zones = ["ap-southeast-1a", "ap-southeast-1b", "ap-southeast-1c"]
   availability_zones   = [data.aws_availability_zones.all.names[0],data.aws_availability_zones.all.names[1],data.aws_availability_zones.all.names[2]]
   # security_groups    = ["${aws_security_group.elb.id}"]
   security_groups    = [aws_security_group.elb.id]
@@ -101,6 +101,7 @@ resource "aws_security_group" "elb" {
   egress {
     from_port   = 0
     to_port     = 0
+    # protocol    = "all"
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
