@@ -1,9 +1,11 @@
 provider "aws" {
-  region = "us-east-1"
+  region = "ap-southeast-1"
 }
 
 resource "aws_s3_bucket" "terraform_state" {
-  bucket = "${var.bucket_name}"
+  # bucket = "${var.bucket_name}"
+  # bucket = "terraform-up-s3-state-ap-southeast-1-20201113"
+  bucket = var.bucket_name
 
   versioning {
     enabled = true
@@ -23,15 +25,17 @@ resource "aws_s3_bucket" "terraform_state" {
 ##        참조 - https://www.terraform.io/docs/backends/config.html
 ## =============================================================================
 
-#terraform {
-#  backend "s3" {
-#    bucket = "(생성한 버킷 이름)"
-#    key    = "terraform.tfstate"
-#    region = "us-east-1"
-#    encrypt = true
-##   dynamodb_table = "(아래에서 생성한 테이블 이름)"
-#  }
-#}
+terraform {
+  backend "s3" {
+    # 백앤드에서는 참조변수를 쓸수 없으므로 직접 값을 입력해야 함
+    bucket = "terraform-up-s3-state-ap-southeast-1-20201113"
+    key    = "terraform.tfstate"
+    region = "ap-southeast-1"
+    encrypt = true
+#   dynamodb_table = "(아래에서 생성한 테이블 이름)"
+    dynamodb_table = "terraform-up-and-running-lock"
+  }
+}
 
 ## =============================================================================
 ##  <3장> 상태 파일 잠금
@@ -41,15 +45,17 @@ resource "aws_s3_bucket" "terraform_state" {
 ##        참조 - https://www.terraform.io/docs/backends/types/index.html)
 ## =============================================================================
 
-#resource "aws_dynamodb_table" "terraform_lock" {
-##   var.tf 파일에 dynamodb_name에 대한 주석 해제  
-#    name = "${var.dynamodb_name}"
-#    hash_key = "LockID"
-#    read_capacity  = 1
-#    write_capacity = 1
+resource "aws_dynamodb_table" "terraform_lock" {
+#   var.tf 파일에 dynamodb_name에 대한 주석 해제  
+    # name = "${var.dynamodb_name}"
+    # name = "terraform-up-and-running-lock"
+    name = var.dynamodb_name
+    hash_key = "LockID"
+    read_capacity  = 1
+    write_capacity = 1
 
-#    attribute {
-#      name = "LockID"
-#      type = "S"
-#    }
-#}
+    attribute {
+      name = "LockID"
+      type = "S"
+    }
+}
