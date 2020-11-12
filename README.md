@@ -1,6 +1,10 @@
 원서 코드 : https://github.com/brikis98/terraform-up-and-running-code
-
 추가소스 : https://github.com/Donhyun72/Terraform-Up-and-Running-Code-Samples-Translated
+
+- Terraform 0.11에서 0.13으로 변경된 문법 수정
+- 문법오류가 있는 코드 수정
+
+
 
 # Terraform: 구성과 동작 실습 코드
 
