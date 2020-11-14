@@ -19,13 +19,16 @@ data "template_file" "user_data" {
   # template = "${file("user-data.sh")}"
   template = file("user-data.sh")
 
-  vars {
+  # vars {
+  vars = {
     # server_port = "${var.server_port}"
     server_port = var.server_port
     # db_address  = "${data.terraform_remote_state.db.address}"
-    db_address  = data.terraform_remote_state.db.address
+    # db_address  = data.terraform_remote_state.db.address
+    db_address  = data.terraform_remote_state.db
     # db_port     = "${data.terraform_remote_state.db.port}"
-    db_port     = data.terraform_remote_state.db.port
+    # db_port     = data.terraform_remote_state.db.port
+    db_port     = data.terraform_remote_state.db
   }
 }
 
@@ -113,7 +116,8 @@ resource "aws_security_group" "elb" {
 data "terraform_remote_state" "db" {
   backend = "s3"
 
-  config {
+  # config {
+  config = {
     # bucket = "${var.db_remote_state_bucket}"
     bucket = var.db_remote_state_bucket
     # key    = "${var.db_remote_state_key}"
